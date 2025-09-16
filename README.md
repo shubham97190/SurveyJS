@@ -53,7 +53,7 @@ pip install -r requirements.txt
 
 4. Run the application:
 ```bash
-uvicorn app.main:app --reload --port 8009 --host 0.0.0.0
+uvicorn main:app --reload --port 8009 --host 0.0.0.0
 ```
 
 The API will be available at `http://localhost:8000`
