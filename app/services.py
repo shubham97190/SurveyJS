@@ -2,7 +2,7 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 from datetime import timezone
 from typing import Dict, Any, Optional, List
 from datetime import datetime
-from .model import oid, doc_to_out, ResponseOut
+from .model import oid, doc_to_out
 
 
 async def create_survey(db: AsyncIOMotorDatabase, payload: Dict[str, Any]) -> Dict[str, Any]:
@@ -75,3 +75,20 @@ async def list_responses(db: AsyncIOMotorDatabase, survey_id: Optional[str] = No
     items = [doc_to_out(doc) async for doc in cursor]
     # items = [ResponseOut(**doc_to_out(doc)).model_dump() async for doc in cursor]
     return {"items": items}
+
+
+async def delete_all_surveys(db: AsyncIOMotorDatabase) -> Dict[str, int]:
+    """Delete all surveys and their associated responses."""
+    surveys_col = db["surveys"]
+    responses_col = db["responses"]
+    
+    # Delete all responses first
+    responses_deleted = await responses_col.delete_many({})
+    
+    # Then delete all surveys
+    surveys_deleted = await surveys_col.delete_many({})
+    
+    return {
+        "surveys_deleted": surveys_deleted.deleted_count,
+        "responses_deleted": responses_deleted.deleted_count
+    }

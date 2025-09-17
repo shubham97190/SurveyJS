@@ -71,6 +71,11 @@ The API will be available at `http://localhost:8000`
   - GET `/v1/surveys/{survey_id}`
   - Retrieves a specific survey by ID
 
+- **Delete All Surveys**
+  - DELETE `/v1/surveys/all`
+  - Deletes all surveys and their associated responses
+  - Returns count of deleted surveys and responses
+
 ### Responses
 
 - **Create Response**

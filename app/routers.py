@@ -1,7 +1,7 @@
 from typing import Dict, Any, List
 from fastapi import APIRouter, Depends, HTTPException, Body, Query
 from motor.motor_asyncio import AsyncIOMotorDatabase
-from .services import create_update_survey, get_survey, create_response, get_response, list_responses
+from .services import create_update_survey, get_survey, create_response, get_response, list_responses, delete_all_surveys
 from .model import SurveyCreate, SurveyOut, ResponseCreate, ResponseOut, doc_to_out
 from .database import get_db
 
@@ -43,3 +43,10 @@ async def list_survey_responses(survey_id: str, limit: int = Query(20, ge=1, le=
     if not response:
         raise HTTPException(status_code=404, detail="Response not found")
     return response
+
+
+@router.delete("/all", response_model=Dict[str, int])
+async def delete_all(db: AsyncIOMotorDatabase = Depends(get_db)):
+    """Delete all surveys and their associated responses."""
+    result = await delete_all_surveys(db)
+    return result
