@@ -13,7 +13,7 @@ async def create_survey(payload: SurveyCreate, db: AsyncIOMotorDatabase = Depend
 
 @router.get("", response_model=Dict[str, Any])
 async def list_surveys(db: AsyncIOMotorDatabase = Depends(get_db)):
-    surveys = await db["surveys"].find().to_list(1)
+    surveys = await db["surveys"].find().limit(1).batch_size(100)
     return {"surveys": [doc_to_out(doc) async for doc in surveys]}
 
 @router.get("/{survey_id}", response_model=SurveyOut)
