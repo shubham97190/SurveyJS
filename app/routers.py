@@ -2,7 +2,7 @@ from typing import Dict, Any, List
 from fastapi import APIRouter, Depends, HTTPException, Body, Query
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from .services import create_update_survey, get_survey, create_response, get_response, list_responses
-from .model import SurveyCreate, SurveyOut, ResponseCreate, ResponseOut
+from .model import SurveyCreate, SurveyOut, ResponseCreate, ResponseOut, doc_to_out
 from .database import get_db
 
 router = APIRouter(prefix="/v1/surveys", tags=["surveys"])
@@ -11,11 +11,10 @@ router = APIRouter(prefix="/v1/surveys", tags=["surveys"])
 async def create_survey(payload: SurveyCreate, db: AsyncIOMotorDatabase = Depends(get_db)):
     return await create_update_survey(db, payload.model_dump())
 
-
 @router.get("", response_model=Dict[str, Any])
 async def list_surveys(db: AsyncIOMotorDatabase = Depends(get_db)):
-    surveys = await db["surveys"].find().to_list(100)
-    return {"surveys": surveys}
+    surveys = await db["surveys"].find().to_list(1)
+    return {"surveys": [doc_to_out(doc) async for doc in surveys]}
 
 @router.get("/{survey_id}", response_model=SurveyOut)
 async def get_survey_by_id(survey_id: str, db: AsyncIOMotorDatabase = Depends(get_db)):
