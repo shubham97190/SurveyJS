@@ -52,7 +52,7 @@ async def create_response(db: AsyncIOMotorDatabase, payload: Dict[str, Any]) -> 
     col = db["responses"]
     now = datetime.now(timezone.utc)
     doc = {
-        "survey_id": oid(payload["survey_id"]),
+        "survey_id": payload["survey_id"],
         "data": payload.get("data", {}),
         "created_at": now,
         "updated_at": now,

@@ -9,7 +9,7 @@ def oid(str_id: str) -> ObjectId:
     try:
         return ObjectId(str_id)
     except Exception as e:
-        raise ValueError("Invalid ObjectId") from e
+        return str_id
 
 
 def doc_to_out(doc: Dict[str, Any]) -> Dict[str, Any]:
