@@ -62,6 +62,12 @@ The API will be available at `http://localhost:8000`
 
 ### Surveys
 
+- **List Surveys**
+  - GET `/v1/surveys`
+  - Query Parameters:
+    - `limit`: Maximum number of surveys to return (default: 20, max: 200)
+  - Returns list of all surveys, newest first
+
 - **Create/Update Survey**
   - POST `/v1/surveys`
   - Body: `{ "data": { ... } }`
