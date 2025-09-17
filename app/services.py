@@ -67,14 +67,14 @@ async def get_response(db: AsyncIOMotorDatabase, response_id: str) -> Optional[D
     return doc_to_out(doc) if doc else None
 
 
-async def list_responses(db: AsyncIOMotorDatabase, survey_id: Optional[str] = None, limit: int = 20) -> Dict[str, List[Dict[str, Any]]]:
+async def list_responses(db: AsyncIOMotorDatabase, survey_id: Optional[str] = None, limit: int = 200) -> Dict[str, List[Dict[str, Any]]]:
     col = db["responses"]
     query = {"survey_id": oid(survey_id)} if survey_id else {}
     items: List[Dict[str, Any]] = []
     cursor = col.find(query).sort("_id", -1).limit(limit).batch_size(100)
-    items = [doc_to_out(doc) async for doc in cursor]
+    items = [doc['data'] async for doc in cursor]
     # items = [ResponseOut(**doc_to_out(doc)).model_dump() async for doc in cursor]
-    return {"items": items}
+    return {"data": items}
 
 
 async def delete_all_surveys(db: AsyncIOMotorDatabase) -> Dict[str, int]:

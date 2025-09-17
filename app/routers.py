@@ -40,8 +40,8 @@ async def get_survey_response(response_id: str, db: AsyncIOMotorDatabase = Depen
         raise HTTPException(status_code=404, detail="Response not found")
     return response
 
-@router.get("/responses/by-survey/{survey_id}", response_model=Dict[str, List[ResponseOut]])
-async def list_survey_responses(survey_id: str, limit: int = Query(20, ge=1, le=200), db: AsyncIOMotorDatabase = Depends(get_db)):
+@router.get("/responses/by-survey/{survey_id}", response_model=Dict[str, List[Dict[str, Any]]])
+async def list_survey_responses(survey_id: str, limit: int = Query(200, ge=1, le=200), db: AsyncIOMotorDatabase = Depends(get_db)):
     response = await list_responses(db, survey_id, limit)
     if not response:
         raise HTTPException(status_code=404, detail="Response not found")
