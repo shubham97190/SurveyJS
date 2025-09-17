@@ -18,7 +18,7 @@ async def list_surveys(db: AsyncIOMotorDatabase = Depends(get_db)):
         doc = await cursor.next()
         return doc_to_out(doc)
     except StopAsyncIteration:
-        return {}
+        return {"data": [], "created_at": None, "updated_at": None, "id": None}
 
 @router.get("/{survey_id}", response_model=SurveyOut)
 async def get_survey_by_id(survey_id: str, db: AsyncIOMotorDatabase = Depends(get_db)):
